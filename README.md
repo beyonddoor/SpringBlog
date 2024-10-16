@@ -1,2 +1,27 @@
-# SpringBlog
-A blog system developed by spring boot
+- SpringBlog
+- 项目目的
+    - 熟悉spring boot的开发
+    - 熟悉前后端的技术栈
+    - 发布自己的博客的系统
+- 需求
+    - 文章展示页面
+        - 展示评论？
+    - 主页
+    - 错误页
+    - 登录页面
+    - 后台管理页面
+- 设计
+    - 数据结构
+        - article
+            - id
+            - pubdate
+            - title
+            - content
+            - userId
+        - comment
+            - id
+            - userId
+            - content
+        - user
+            - id
+            - userName
