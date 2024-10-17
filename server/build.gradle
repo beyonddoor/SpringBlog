@@ -7,6 +7,8 @@ plugins {
 group = 'codefun'
 version = '0.0.1-SNAPSHOT'
 
+//sysProps['javax.net.ssl.protocolVersion'] = 'TLSv1.1'
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -21,12 +23,21 @@ configurations {
 
 repositories {
     mavenCentral()
+    google()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.netty:netty-all:4.1.68.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+//    热加载
+//    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
