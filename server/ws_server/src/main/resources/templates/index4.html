@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Client</title>
+</head>
+<body>
+<script>
+    const socket = new WebSocket('ws://localhost:8080/ws_bin');
+
+    socket.binaryType = 'arraybuffer';
+
+    socket.onopen = function () {
+        console.log('WebSocket Client Connected');
+        const binaryData = new Uint8Array([/* your binary data here */]);
+        socket.send(binaryData.buffer);
+    };
+
+    socket.onmessage = function (event) {
+        const response = new Uint8Array(event.data);
+        console.log('Received binary data:', response);
+    };
+
+    socket.onclose = function () {
+        console.log('WebSocket Client Disconnected');
+    };
+</script>
+</body>
+</html>

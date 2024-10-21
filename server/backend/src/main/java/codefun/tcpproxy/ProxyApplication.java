@@ -1,24 +1,37 @@
-package codefun.server;
+package codefun.tcpproxy;
 
+import codefun.tcpproxy.config.TcpProxyConfig;
+import codefun.tcpproxy.handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 /**
  * start netty to serve
  */
 @Slf4j
-public class NettyServer {
+@SpringBootApplication
+public class ProxyApplication {
+    @Autowired
+    private TcpProxyConfig tcpProxyConfig;
     public static void main(String[] args) throws Exception {
+        SpringApplication.run(ProxyApplication.class, args);
+
+        Connector.getInstance().init();
+        new ProxyApplication().startServer();
+        Connector.getInstance().shutdown();
+    }
+
+    void startServer() throws Exception{
         log.debug("start a nettyserver");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -31,11 +44,12 @@ public class NettyServer {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             log.debug("init channel {}", ch);
-                            ch.pipeline().addLast(new StringDecoder(), new StringEncoder(), new ServerHandler());
+//                            ch.pipeline().addLast(new StringDecoder(), new StringEncoder(), new ServerHandler());
+                            ch.pipeline().addLast(null, null, new ServerHandler());
                         }
                     });
 
-            ChannelFuture f = b.bind(8889).sync();
+            ChannelFuture f = b.bind(tcpProxyConfig.getLocalPort()).sync();
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

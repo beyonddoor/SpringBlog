@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <script>
+        var socket;
+
+        function connect() {
+            socket = new WebSocket('ws://localhost:8080/ws_bin');
+            socket.binaryType = 'arraybuffer';
+
+            socket.onopen = function() {
+                showMessage('Connected');
+            };
+
+            socket.onmessage = function(event) {
+                var data = event.data;
+                if (typeof data === 'string') {
+                    showMessage(data);
+                } else {
+                    var byteArray = new Uint8Array(data);
+                    // decode the binary data to string
+                    showMessage('Received binary data of length: ' + byteArray.length);
+                    try {
+                        var decoder = new TextDecoder('utf-8');
+                        var text = decoder.decode(byteArray);
+                        showMessage('Decoded binary data: ' + text);
+                    } catch (e) {
+                        showMessage('Failed to decode binary data: ' + e);
+                    }
+                }
+            };
+
+            socket.onclose = function() {
+                showMessage('Disconnected');
+            };
+        }
+
+        function sendMessage() {
+            var message = document.getElementById('message').value;
+            var buffer = new TextEncoder().encode(message);
+            socket.send(buffer);
+            console.log('send: ' + message);
+        }
+
+        function showMessage(message) {
+            var response = document.getElementById('response');
+            response.insertAdjacentHTML("afterbegin", `<p>${message}</p>`);
+            // response.innerHTML = '<p>' + message + '</p>' + response.innerHTML;
+        }
+
+        window.onload = function() {
+            connect();
+        };
+    </script>
+</head>
+<body>
+<input type="text" id="message" placeholder="Enter message">
+<button onclick="sendMessage()">Send</button>
+<div id="response"></div>
+</body>
+</html>

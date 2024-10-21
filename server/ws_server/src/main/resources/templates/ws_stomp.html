@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<script>
+    var socket = new SockJS('/ws_msg'); // Connect to WebSocket endpoint
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function(frame) {
+        console.log('Connected: ' + frame);
+
+        // Subscribe to messages
+        stompClient.subscribe('/topic/greetings', function(greeting) {
+            alert(JSON.parse(greeting.body).content);
+        });
+    });
+
+    // Example of sending a message
+    function sendName() {
+        stompClient.send("/app/hello", {}, JSON.stringify({'name': 'User'}));
+    }
+
+    sendName();
+</script>
+</body>
+</html>

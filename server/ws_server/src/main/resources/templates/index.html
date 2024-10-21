@@ -1,0 +1,65 @@
+<!doctype html>
+
+<body>
+<h2>WebSocket Test</h2>
+<p>Sends a ping every five seconds</p>
+<input type="text" id="url" value="ws://localhost:8080/ws_bin">
+<button onclick="restart()">Restart</button>
+
+<input type="text" id="message" value="ping">
+<button onclick="sendMessage(document.querySelector('#message').value)">send</button>
+
+<div>
+    <a href="index_by_name?name=index2.html">send binary to ws_bin</a> <br>
+    <a href="index_by_name?name=index4.html">send binary to ws_bin</a> <br>
+    <a href="index_by_name?name=ws_stomp.html">send stomp message to ws_msg</a> <br>
+</div>
+
+<div id="output"></div>
+</body>
+<script>
+    // const wsUri = "ws://127.0.0.1/";
+    const output = document.querySelector("#output");
+    let websocket;
+    let pingInterval;
+
+    // restart websocket connection
+    function restart() {
+        if (websocket) {
+            websocket.close();
+        }
+        websocket = new WebSocket(document.querySelector("#url").value);
+        websocket.binaryType = 'arraybuffer';
+
+        websocket.onopen = (e) => {
+            writeToScreen("CONNECTED");
+            sendMessage("ping");
+            pingInterval = setInterval(() => {
+                sendMessage("ping");
+            }, 5000);
+        };
+
+        websocket.onclose = (e) => {
+            writeToScreen("DISCONNECTED");
+            clearInterval(pingInterval);
+        };
+
+        websocket.onmessage = (e) => {
+            writeToScreen(`RECEIVED: ${e.data}`);
+        };
+
+        websocket.onerror = (e) => {
+            writeToScreen(`ERROR: ${e.data}`);
+        };
+    }
+
+    function writeToScreen(message) {
+        output.insertAdjacentHTML("afterbegin", `<p>${message}</p>`);
+    }
+
+    function sendMessage(message) {
+        writeToScreen(`SENT: ${message}`);
+        websocket.send(message);
+    }
+
+</script>

@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/netty")
 public class NettyController {
 
-    @Autowired
-    private NettyServerService nettyServerService;
+    private final NettyServerService nettyServerService;
+
+    public NettyController(NettyServerService nettyServerService) {
+        this.nettyServerService = nettyServerService;
+    }
 
     @GetMapping("/test")
     public void test() {

@@ -1,0 +1,5 @@
+
+app:
+  host: localhost
+  port: 8080
+  localport: 8080
