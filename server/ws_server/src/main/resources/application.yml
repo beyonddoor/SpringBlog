@@ -1,8 +1,10 @@
 server:
-  port: 8080
-logging:
-  level.codefun: DEBUG
+  port: 8088
 
+logging:
+  level:
+    codefun: INFO
+    root: INFO
 
 spring:
   web:
@@ -11,3 +13,10 @@ spring:
 
   mvc:
     static-path-pattern: /mystatic/**
+
+app:
+  # the  server
+  backend-host: localhost
+  backend-port: 8081
+
+

@@ -2,6 +2,9 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
+
+    //    create a fat jar
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'codefun'
@@ -12,6 +15,24 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+//create a fat jar
+shadowJar {
+    archiveBaseName.set('your-jar-name')
+    archiveVersion.set('0.0.1-SNAPSHOT')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'codefun.ws_demo.WsApplication'
+    }
+}
+
+//jar {
+//    manifest {
+//        attributes(
+//                'Main-Class': 'codefun.server.NettyServer'
+//        )
+//    }
+//}
 
 configurations {
     compileOnly {

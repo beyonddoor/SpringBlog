@@ -14,7 +14,7 @@ public class MessageController {
     @MessageMapping("/app/hello")
     @SendTo("/topic/greetings")
     public Greeting greeting(HelloMessage message) {
-        log.debug("Received message: " + message.getName());
+        log.debug("Received message: {}", message.getName());
         return new Greeting("Hello, " + message.getName() + "!");
     }
 }

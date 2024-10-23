@@ -4,9 +4,8 @@
     <title>WebSocket Test</title>
     <script>
         var socket;
-
         function connect() {
-            socket = new WebSocket('ws://localhost:8080/ws_bin');
+            socket = new WebSocket('ws://172.16.200.96:8088/ws_bin');
             socket.binaryType = 'arraybuffer';
 
             socket.onopen = function() {
