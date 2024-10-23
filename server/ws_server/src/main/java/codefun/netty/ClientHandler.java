@@ -8,14 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-/**
- * TODO 如何关联byte和binarymessage
- */
 @Slf4j
 public class ClientHandler extends ChannelInboundHandlerAdapter {
-    /**
-     * accpet channel
-     */
     private final WebSocketSession session;
 
     public ClientHandler(WebSocketSession session) {
@@ -38,14 +32,20 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         log.debug("Channel channelRead");
         ByteBuf byteBuf = (ByteBuf) msg;
-        // send all bytes in byteBuf to session
-
-//        todo 可能的性能问题
         session.sendMessage(new BinaryMessage(ByteBufferUtil.getAllReadableBytes(byteBuf)));
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         log.debug("Channel channelReadComplete");
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.error("exceptionCaught local={} remote={}",
+                ctx.channel().localAddress(),
+                ctx.channel().remoteAddress(), cause);
+        // 不同于disconnect的gracefully
+        ctx.close();
     }
 }
