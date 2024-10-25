@@ -1,5 +1,4 @@
 rootProject.name = 'blog'
 include 'backend'
 include 'netty_server'
-include 'netty_only'
 
