@@ -1,4 +1,4 @@
-package codefun.tcpproxy.config;
+package codefun.echoserver.config;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;

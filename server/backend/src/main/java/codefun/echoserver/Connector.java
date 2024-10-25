@@ -1,7 +1,7 @@
-package codefun.tcpproxy;
+package codefun.echoserver;
 
 
-import codefun.tcpproxy.handler.ClientHandler;
+import codefun.echoserver.handler.ClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

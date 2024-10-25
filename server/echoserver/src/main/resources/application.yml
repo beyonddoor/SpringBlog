@@ -1,0 +1,7 @@
+
+app:
+  localport: 8081
+
+logging:
+  level:
+    codefun: INFO

@@ -1,7 +1,7 @@
-package codefun.tcpproxy;
+package codefun.echoserver;
 
-import codefun.tcpproxy.config.TcpProxyConfig;
-import codefun.tcpproxy.handler.ServerHandler;
+import codefun.echoserver.config.EchoServerConfig;
+import codefun.echoserver.handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -11,6 +11,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -20,18 +21,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @Slf4j
 @SpringBootApplication
-public class ProxyApplication {
+public class EchoServerApplication implements CommandLineRunner {
     @Autowired
-    private TcpProxyConfig tcpProxyConfig;
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(ProxyApplication.class, args);
+    private EchoServerConfig echoServerConfig;
 
-        Connector.getInstance().init();
-        new ProxyApplication().startServer();
-        Connector.getInstance().shutdown();
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(EchoServerApplication.class, args);
     }
 
-    void startServer() throws Exception{
+    private void startServer() throws Exception{
         log.debug("start a nettyserver");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -44,16 +42,20 @@ public class ProxyApplication {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             log.debug("init channel {}", ch);
-//                            ch.pipeline().addLast(new StringDecoder(), new StringEncoder(), new ServerHandler());
                             ch.pipeline().addLast(null, null, new ServerHandler());
                         }
                     });
 
-            ChannelFuture f = b.bind(tcpProxyConfig.getLocalPort()).sync();
+            ChannelFuture f = b.bind(echoServerConfig.getLocalPort()).sync();
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        startServer();
     }
 }

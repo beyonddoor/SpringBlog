@@ -1,6 +1,6 @@
-package codefun.tcpproxy.handler;
+package codefun.echoserver.handler;
 
-import codefun.tcpproxy.Connector;
+import codefun.echoserver.Connector;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

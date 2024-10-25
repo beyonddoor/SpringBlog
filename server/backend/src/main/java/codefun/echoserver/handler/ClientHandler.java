@@ -1,4 +1,4 @@
-package codefun.tcpproxy.handler;
+package codefun.echoserver.handler;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
