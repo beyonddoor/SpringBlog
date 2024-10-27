@@ -1,4 +1,4 @@
-package codefun.netty_only.config;
+package codefun.load_test.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

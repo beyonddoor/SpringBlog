@@ -1,6 +1,6 @@
-package codefun.netty_only;
+package codefun.load_test;
 
-import codefun.netty_only.config.AppSetting;
+import codefun.load_test.config.AppSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

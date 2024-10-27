@@ -1,6 +1,6 @@
-package codefun.netty_only.handler;
+package codefun.load_test.handler;
 
-import codefun.netty_only.util.NettyUtil;
+import codefun.load_test.util.NettyUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;

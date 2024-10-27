@@ -1,9 +1,8 @@
-package codefun.netty_only;
+package codefun.load_test;
 
-import codefun.netty_only.config.AppSetting;
-import codefun.netty_only.handler.WebSocketFrameHandler;
+import codefun.load_test.config.AppSetting;
+import codefun.load_test.handler.WebSocketFrameHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;

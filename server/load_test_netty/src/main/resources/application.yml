@@ -1,6 +1,6 @@
 logging:
   level:
-    codefun: INFO
+    codefun: DEBUG
     root: INFO
 
 spring:
@@ -13,8 +13,8 @@ spring:
 
 app:
   # the  server
-  backend-host: localhost
-  backend-port: 8081
-  port: 8088
-  web-socket-path: /ws_bin
+  host: 172.25.66.221
+  port: 8081
+  message: .
+  user-count: 100
 

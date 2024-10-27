@@ -1,4 +1,4 @@
-package codefun.netty_only.util;
+package codefun.load_test.util;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;

@@ -1,14 +1,13 @@
-package codefun.netty_only.handler;
+package codefun.load_test.handler;
 
-import codefun.netty_only.config.AppSetting;
-import codefun.netty_only.util.NettyUtil;
+import codefun.load_test.config.AppSetting;
+import codefun.load_test.util.NettyUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
 /**

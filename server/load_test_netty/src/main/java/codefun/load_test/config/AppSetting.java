@@ -1,4 +1,4 @@
-package codefun.netty_only.config;
+package codefun.load_test.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app")
 @Data
 public class AppSetting {
-    private String backendHost;
-    private int backendPort;
+    private int userCount;
+    private String host;
+    private String message;
     private int port;
-    private String webSocketPath;
 }
