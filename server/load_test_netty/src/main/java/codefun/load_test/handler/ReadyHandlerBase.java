@@ -1,7 +1,6 @@
 package codefun.load_test.handler;
 
-import codefun.load_test.logic.UserManager;
-import codefun.load_test.config.AppSetting;
+import codefun.load_test.logic.user.User;
 import codefun.load_test.util.NettyUtil;
 import io.netty.channel.*;
 import lombok.extern.slf4j.Slf4j;
@@ -10,27 +9,25 @@ import lombok.extern.slf4j.Slf4j;
  * 处理前端的handler
  */
 @Slf4j
-public class ClientHandler extends ChannelInboundHandlerAdapter {
-    private final AppSetting appSetting;
-    private final UserManager userManager;
+public abstract class ReadyHandlerBase extends ChannelInboundHandlerAdapter {
+    protected final User user;
 
-    public ClientHandler(AppSetting appSetting, UserManager userManager) {
+    public ReadyHandlerBase(User user) {
         super();
         log.debug("ClientHandler created");
-        this.appSetting = appSetting;
-        this.userManager = userManager;
+        this.user = user;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.debug("channelActive {}", ctx.channel());
-        userManager.onChannelActive(ctx.channel());
+        user.getUserManager().onChannelActive(user);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.debug("channelInactive {}", ctx.channel());
-        userManager.onChannelInactive(ctx.channel());
+        user.getUserManager().onChannelInactive(user);
     }
 
     @Override

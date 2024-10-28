@@ -1,6 +1,6 @@
 package codefun.load_test.logic.ai;
 
-import codefun.load_test.logic.User;
+import codefun.load_test.logic.user.User;
 
 public interface IUserAI {
     void setUser(User user);

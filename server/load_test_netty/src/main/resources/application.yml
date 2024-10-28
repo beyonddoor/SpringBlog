@@ -1,20 +1,22 @@
 logging:
   level:
-    codefun: DEBUG
+    codefun: INFO
     root: INFO
-
-spring:
-  web:
-    resources:
-      static-locations: classpath:/static/
-
-  mvc:
-    static-path-pattern: /mystatic/**
 
 app:
   # the  server
-  host: 172.25.66.221
-  port: 8081
-  message: .
+  #host: 172.25.66.221
+#  host: 172.23.94.136
+  web-socket-path: ws://172.16.200.96:8088/ws_bin
+  host: 172.16.200.96
+  port: 8088
+
+  # user 相关
   user-count: 100
+  ramp-up-time: 10
+
+  # 消息相关
+  #  message: .
+  message-file: D:\mine\learn-langs\Toolbag\work\alias\common.sh
+  message-interval-ms: 20
 
