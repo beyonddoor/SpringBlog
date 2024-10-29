@@ -1,5 +1,6 @@
 package codefun.load_test.handler;
 
+import codefun.load_test.config.AppSetting;
 import codefun.load_test.util.NettyUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
@@ -11,18 +12,25 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class BackendHandler extends ChannelInboundHandlerAdapter {
-
+    /**
+     * 前端的channel
+     */
     private final Channel frontendChannel;
+    private final AppSetting appSetting;
 
-    public BackendHandler(Channel frontendChannel) {
+    public BackendHandler(Channel frontendChannel, AppSetting appSetting) {
         this.frontendChannel = frontendChannel;
+        this.appSetting = appSetting;
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        log.debug("Channel read {}", msg);
+        if (log.isDebugEnabled() && appSetting.isLogData()) {
+            log.debug("Channel read {}", msg);
+        }
+
+        var buff = (ByteBuf) msg;
         if (frontendChannel.isActive()) {
-            var buff = (ByteBuf) msg;
             frontendChannel.writeAndFlush(new BinaryWebSocketFrame(buff))
                     .addListener((ChannelFutureListener) future -> {
                         if (future.isSuccess()) {
@@ -31,6 +39,8 @@ public class BackendHandler extends ChannelInboundHandlerAdapter {
                             future.channel().close();
                         }
                     });
+        } else {
+            buff.release();
         }
     }
 

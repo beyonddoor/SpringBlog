@@ -38,7 +38,7 @@ public class TestLoadApplication implements ApplicationRunner {
         userManager.addUserListener(new IUserListener() {
             @Override
             public void onUserStop(User user) {
-                user.connect();
+                scheduler.schedule(user::connect, appSetting.getWaitToReconnectMs(), TimeUnit.MILLISECONDS);
             }
         });
 
@@ -54,7 +54,7 @@ public class TestLoadApplication implements ApplicationRunner {
                 var diffNs = System.nanoTime() - lastTimeNs;
                 lastTimeNs = System.nanoTime();
                 var sleepMs = (int)((float)batchCount * appSetting.getRampUpTime() / appSetting.getUserCount() * 1000);
-                // fixme ramp up time is wrong
+                // todo more accurate ramp up time
                 // sleepMs -= (int)(diffNs / 1000000);
                 if(sleepMs > 0) {
                     Thread.sleep(sleepMs);

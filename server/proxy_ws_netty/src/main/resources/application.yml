@@ -1,15 +1,7 @@
 logging:
   level:
-    codefun: INFO
+    codefun: DEBUG
     root: INFO
-
-spring:
-  web:
-    resources:
-      static-locations: classpath:/static/
-
-  mvc:
-    static-path-pattern: /mystatic/**
 
 app:
   # the  server
@@ -17,4 +9,4 @@ app:
   backend-port: 8081
   port: 8088
   web-socket-path: /ws_bin
-
+  log-data: false

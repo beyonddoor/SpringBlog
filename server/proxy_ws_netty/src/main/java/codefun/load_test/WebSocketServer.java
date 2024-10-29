@@ -1,7 +1,8 @@
 package codefun.load_test;
 
 import codefun.load_test.config.AppSetting;
-import codefun.load_test.handler.WebSocketFrameHandler;
+import codefun.load_test.handler.CounterHandler;
+import codefun.load_test.handler.FrontendHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -18,9 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 public class WebSocketServer {
 
     private final AppSetting appSetting;
+    private final CounterHandler counterHandler;
 
-    public WebSocketServer(AppSetting appSetting) {
+    public WebSocketServer(AppSetting appSetting, CounterHandler counterHandler) {
         this.appSetting = appSetting;
+        this.counterHandler = counterHandler;
     }
 
     public void start() throws InterruptedException {
@@ -36,8 +39,10 @@ public class WebSocketServer {
                             ch.pipeline().addLast(new HttpServerCodec());
                             ch.pipeline().addLast(new ChunkedWriteHandler());
                             ch.pipeline().addLast(new HttpObjectAggregator(8192));
+                            // here can add more endpoints
                             ch.pipeline().addLast(new WebSocketServerProtocolHandler(appSetting.getWebSocketPath()));
-                            ch.pipeline().addLast(new WebSocketFrameHandler(appSetting));
+                            ch.pipeline().addLast(counterHandler);
+                            ch.pipeline().addLast(new FrontendHandler(appSetting));
                         }
                     });
 

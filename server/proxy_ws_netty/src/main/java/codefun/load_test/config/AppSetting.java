@@ -12,4 +12,5 @@ public class AppSetting {
     private int backendPort;
     private int port;
     private String webSocketPath;
+    private boolean logData;
 }

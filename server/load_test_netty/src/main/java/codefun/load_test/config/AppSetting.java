@@ -29,6 +29,8 @@ public class AppSetting {
      */
     private int messageIntervalMs;
 
+    private int waitToReconnectMs;
+
     private int port;
 
     /**
