@@ -1,10 +1,19 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.guardsquare:proguard-gradle:7.6.0'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
 
-    //    create a fat jar
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+//    //    create a fat jar
+//    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'codefun'
@@ -16,21 +25,13 @@ java {
     }
 }
 
-//create a fat jar
-shadowJar {
-    archiveBaseName.set('your-jar-name')
-    archiveVersion.set('0.0.1-SNAPSHOT')
-    archiveClassifier.set('')
-    manifest {
-        attributes 'Main-Class': 'codefun.ws_demo.WsApplication'
-    }
-}
-
-//jar {
+////create a fat jar
+//shadowJar {
+//    archiveBaseName.set('your-jar-name')
+//    archiveVersion.set('0.0.1-SNAPSHOT')
+//    archiveClassifier.set('')
 //    manifest {
-//        attributes(
-//                'Main-Class': 'codefun.server.NettyServer'
-//        )
+//        attributes 'Main-Class': 'codefun.ws_demo.WsApplication'
 //    }
 //}
 
@@ -46,8 +47,6 @@ repositories {
 }
 
 dependencies {
-//    implementation 'com.guardsquare:proguard-parent:7.2.0' // Use the latest version
-
     implementation 'io.netty:netty-all:4.1.68.Final'
     implementation 'org.springframework.boot:spring-boot-starter'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -62,3 +61,20 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+}
+
+task proguard(type: proguard.gradle.ProGuardTask) {
+    dependsOn jar
+    injars 'build/libs/proxy_ws_netty-0.0.1-SNAPSHOT.jar'
+    outjars 'build/libs/proxy_ws_netty-0.0.1-SNAPSHOT-min.jar'
+    configuration 'src/main/resources/proguard-files.pro'
+}
+
+//jar {
+//    dependsOn proguard
+//    archiveClassifier.set('min')
+//}

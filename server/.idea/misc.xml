@@ -6,12 +6,7 @@
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/console" />
-    <file type="web" url="file://$PROJECT_DIR$/echoserver" />
-    <file type="web" url="file://$PROJECT_DIR$/load_test_netty" />
-    <file type="web" url="file://$PROJECT_DIR$/proxy_tcp" />
-    <file type="web" url="file://$PROJECT_DIR$/proxy_ws" />
-    <file type="web" url="file://$PROJECT_DIR$/proxy_ws_netty" />
+    <file type="web" url="file://$PROJECT_DIR$" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="17" project-jdk-type="JavaSDK" />
 </project>
