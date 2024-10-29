@@ -2,6 +2,8 @@ package codefun.load_test.handler;
 
 import codefun.load_test.logic.user.User;
 import codefun.load_test.util.NettyUtil;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufHolder;
 import io.netty.channel.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +35,14 @@ public abstract class ReadyHandlerBase extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         log.debug("channelRead {}", msg);
+        if(msg instanceof ByteBufHolder holder) {
+            ByteBuf buf = holder.content();
+            user.onChannelRead(buf);
+        } else if (msg instanceof ByteBuf buf) {
+            user.onChannelRead(buf);
+        } else {
+            log.error("Unknown message type: {}", msg.getClass());
+        }
     }
 
     @Override

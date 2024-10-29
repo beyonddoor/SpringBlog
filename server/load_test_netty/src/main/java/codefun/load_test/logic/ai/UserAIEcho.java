@@ -48,16 +48,26 @@ public class UserAIEcho implements IUserAI {
         return byteBuf;
     }
 
+    private boolean isWebSocket() {
+        return appSetting.getWebSocketPath() != null;
+    }
+
     private void sendMsg() {
         log.debug("UserAIEcho sendMsg");
 
         assert getBuf().refCnt() == 1;
-        var data = getBuf().retain().writeBytes(appSetting.getSendBytes());
-        if (appSetting.getWebSocketPath() != null) {
-            user.channel().writeAndFlush(new BinaryWebSocketFrame(data));
-        } else {
-            user.channel().writeAndFlush(data);
+
+        var data = getBuf().retain();
+        for(int i = 0; i < 100; i++) {
+            data.writeInt();
         }
+
+//        .writeBytes(appSetting.getSendBytes());
+//        if (appSetting.getWebSocketPath() != null) {
+//            user.channel().writeAndFlush(new BinaryWebSocketFrame(data));
+//        } else {
+//            user.channel().writeAndFlush(data);
+//        }
     }
 
     @Override

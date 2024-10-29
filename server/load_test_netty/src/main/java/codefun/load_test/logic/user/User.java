@@ -3,6 +3,7 @@ package codefun.load_test.logic.user;
 
 import codefun.load_test.logic.ai.IUserAI;
 import codefun.load_test.logic.ai.UserAIFactory;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.Getter;
@@ -78,7 +79,7 @@ public class User {
     }
 
     public void onDisconnected() {
-        stop();
+
     }
 
     public void onReady() {
@@ -86,5 +87,16 @@ public class User {
         var userAI = strategyFactory.createStrategy("echo");
         userAI.setUser(this);
         start(userAI);
+    }
+
+    public void onChannelActive() {
+    }
+
+    public void onChannelRead(ByteBuf buf) {
+        if(userAI != null) {
+            userAI.onRead(buf);
+        } else {
+            buf.release();
+        }
     }
 }

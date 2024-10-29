@@ -43,6 +43,11 @@ public class AppSetting {
      */
     int rampUpTime;
 
+    /**
+     * send int count
+     */
+    int sendIntCount;
+
     private static byte[] sendBytes = null;
 
     public byte[] getSendBytes() {

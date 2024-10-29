@@ -26,7 +26,8 @@ public class UserManager {
         this.strategyFactory = strategyFactory;
     }
 
-    public void onChannelActive(User channel) {
+    public void onChannelActive(User user) {
+        user.onChannelActive();
     }
 
     public void onChannelReady(User user) {

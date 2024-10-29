@@ -20,4 +20,5 @@ app:
   # message-file:
   message-interval-ms: 200
   wait-to-reconnect-ms: 10000
+  send-int-count: 100
 
