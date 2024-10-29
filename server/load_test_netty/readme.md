@@ -4,4 +4,6 @@
 socat - TCP-LISTEN:8081,fork
 
 todo
-1. 修复bytebuf的泄漏
+1. ~~修复bytebuf的泄漏 DONE~~
+2. ~~移除springboot server监听8080 DONE~~
+3. 

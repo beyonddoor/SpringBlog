@@ -6,6 +6,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.local.LocalAddress;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 
 /**
@@ -29,8 +33,9 @@ public class EchoServerApplication implements CommandLineRunner {
         SpringApplication.run(EchoServerApplication.class, args);
     }
 
-    private void startServer() throws Exception{
-        log.debug("start a nettyserver");
+    private void startServer() throws Exception {
+        log.info("start a nettyserver {} {}",
+                echoServerConfig.getLocalAddr(), echoServerConfig.getLocalPort());
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -46,7 +51,9 @@ public class EchoServerApplication implements CommandLineRunner {
                         }
                     });
 
-            ChannelFuture f = b.bind(echoServerConfig.getLocalPort()).sync();
+            ChannelFuture f = b.bind(new InetSocketAddress(
+                    echoServerConfig.getLocalAddr(), echoServerConfig.getLocalPort()
+            )).sync();
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

@@ -15,6 +15,8 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetSocketAddress;
+
 @Slf4j
 public class WebSocketServer {
 
@@ -30,8 +32,8 @@ public class WebSocketServer {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
+            ServerBootstrap bootstrap = new ServerBootstrap();
+            bootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
@@ -46,8 +48,9 @@ public class WebSocketServer {
                         }
                     });
 
-            log.info("WebSocket server started at port {}", appSetting.getPort());
-            b.bind(appSetting.getPort()).sync().channel().closeFuture().sync();
+            log.info("WebSocket server started at {} {}", appSetting.getLocalAddr(), appSetting.getLocalPort());
+            bootstrap.bind(new InetSocketAddress(appSetting.getLocalAddr(), appSetting.getLocalPort()))
+                    .sync().channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();

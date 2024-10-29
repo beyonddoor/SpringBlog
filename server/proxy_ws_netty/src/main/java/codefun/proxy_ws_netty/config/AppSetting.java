@@ -10,7 +10,10 @@ import org.springframework.stereotype.Component;
 public class AppSetting {
     private String backendHost;
     private int backendPort;
-    private int port;
+
+    private int localPort;
+    private String localAddr;
+
     private String webSocketPath;
     private boolean logData;
 }

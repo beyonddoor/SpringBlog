@@ -10,4 +10,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 public class EchoServerConfig {
     private int localPort;
+    private String localAddr;
 }

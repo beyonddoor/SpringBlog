@@ -47,7 +47,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.netty:netty-all:4.1.68.Final'
+    implementation 'io.netty:netty-all:4.1.108.Final'
     implementation 'org.springframework.boot:spring-boot-starter'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

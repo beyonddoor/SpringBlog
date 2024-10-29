@@ -14,19 +14,19 @@ import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @SpringBootApplication
-public class NettyOnlyApplication implements ApplicationRunner {
+public class ProxyApplication implements ApplicationRunner {
 
     private final AppSetting appSetting;
     @Autowired
     private CounterHandler counterHandler;
     ExecutorService executor = Executors.newFixedThreadPool(1);
 
-    public NettyOnlyApplication(AppSetting appSetting) {
+    public ProxyApplication(AppSetting appSetting) {
         this.appSetting = appSetting;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(NettyOnlyApplication.class, args);
+        SpringApplication.run(ProxyApplication.class, args);
     }
 
     @Override

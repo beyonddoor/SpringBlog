@@ -7,18 +7,19 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class UserAIEcho implements IUserAI {
-
     private User user;
     private ScheduledFuture<?> future;
-    private ByteBuf byteBuf;
     private final AppSetting appSetting;
+    private ByteBuf bufToWrite;
+    private ByteBuf bufToRead;
+
+    private long sendSeq = 0;
+    private long recvSeq = 0;
 
     public UserAIEcho() {
         appSetting = SpringContext.getBean(AppSetting.class);
@@ -31,11 +32,15 @@ public class UserAIEcho implements IUserAI {
 
     @Override
     public void start() {
-        log.debug("UserAIEcho start");
+        log.debug("{} UserAIEcho start", user);
 
-        if (byteBuf == null) {
-            byteBuf = user.channel().alloc().directBuffer();
-            assert byteBuf.refCnt() == 1;
+        if (bufToWrite == null) {
+            bufToWrite = user.channel().alloc().directBuffer();
+            assert bufToWrite.refCnt() == 1;
+        }
+
+        if(bufToRead == null) {
+            bufToRead = user.channel().alloc().directBuffer();
         }
 
         future = user.channel().eventLoop().scheduleAtFixedRate(
@@ -43,9 +48,9 @@ public class UserAIEcho implements IUserAI {
     }
 
     private ByteBuf getBuf() {
-        byteBuf.resetReaderIndex();
-        byteBuf.resetWriterIndex();
-        return byteBuf;
+        bufToWrite.resetReaderIndex();
+        bufToWrite.resetWriterIndex();
+        return bufToWrite;
     }
 
     private boolean isWebSocket() {
@@ -58,28 +63,53 @@ public class UserAIEcho implements IUserAI {
         assert getBuf().refCnt() == 1;
 
         var data = getBuf().retain();
-        for(int i = 0; i < 100; i++) {
-            data.writeInt();
+        for (int i = 0; i < appSetting.getSendIntCount(); i++) {
+            sendSeq++;
+            data.writeLong(sendSeq);
         }
 
-//        .writeBytes(appSetting.getSendBytes());
-//        if (appSetting.getWebSocketPath() != null) {
-//            user.channel().writeAndFlush(new BinaryWebSocketFrame(data));
-//        } else {
-//            user.channel().writeAndFlush(data);
-//        }
+        doSend(data);
+    }
+
+    private void doSend(ByteBuf data) {
+        if (isWebSocket()) {
+            user.channel().writeAndFlush(new BinaryWebSocketFrame(data));
+        } else {
+            user.channel().writeAndFlush(data);
+        }
     }
 
     @Override
     public void stop() {
-        log.debug("UserAIEcho stop");
-        if (byteBuf != null) {
-            byteBuf.release();
-            byteBuf = null;
+        log.debug("{} UserAIEcho stop sendSeq={} recvSeq={}", user, sendSeq, recvSeq);
+        if (bufToWrite != null) {
+            bufToWrite.release();
+            bufToWrite = null;
+        }
+        if (bufToRead != null) {
+            bufToRead.release();
+            bufToRead = null;
         }
         if (future != null) {
             future.cancel(true);
             future = null;
+        }
+    }
+
+    @Override
+    public void onRead(ByteBuf buf) {
+
+        bufToRead.writeBytes(buf);
+        buf.release();
+
+        while (bufToRead.readableBytes() >= Long.BYTES) {
+            long seq = bufToRead.readLong();
+            if (seq != recvSeq + 1) {
+                log.error("id:{} seq error {} {}", user.getId(), seq, recvSeq);
+                user.stop();
+                break;
+            }
+            recvSeq = seq;
         }
     }
 }

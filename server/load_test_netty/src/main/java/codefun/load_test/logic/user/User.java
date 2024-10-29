@@ -44,12 +44,12 @@ public class User {
     }
 
     public void stop() {
-        if(userAI != null) {
+        if (userAI != null) {
             userAI.stop();
             userAI = null;
         }
 
-        if(connector != null) {
+        if (connector != null) {
             connector.stop();
             connector = null;
         }
@@ -93,10 +93,17 @@ public class User {
     }
 
     public void onChannelRead(ByteBuf buf) {
-        if(userAI != null) {
+        if (userAI != null) {
             userAI.onRead(buf);
         } else {
             buf.release();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                '}';
     }
 }

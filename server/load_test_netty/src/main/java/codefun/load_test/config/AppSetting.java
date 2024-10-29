@@ -14,16 +14,8 @@ import java.nio.file.Files;
 @ConfigurationProperties(prefix = "app")
 @Data
 public class AppSetting {
-    private int userCount;
     private String host;
-    /**
-     * send text
-     */
-    private String message;
-    /**
-     * send file
-     */
-    private String messageFile;
+    private int port;
     /**
      * send message interval
      */
@@ -31,7 +23,11 @@ public class AppSetting {
 
     private int waitToReconnectMs;
 
-    private int port;
+    /**
+     * send int count
+     */
+    int sendIntCount;
+
 
     /**
      * for websocket
@@ -39,30 +35,12 @@ public class AppSetting {
     String webSocketPath;
 
     /**
+     * user count
+     */
+    private int userCount;
+    /**
      * ramp up seconds
      */
     int rampUpTime;
 
-    /**
-     * send int count
-     */
-    int sendIntCount;
-
-    private static byte[] sendBytes = null;
-
-    public byte[] getSendBytes() {
-        if (sendBytes == null) {
-            if (getMessageFile() != null) {
-                try {
-                    sendBytes = Files.readAllBytes(new File(getMessageFile()).toPath());
-                } catch (IOException e) {
-                    log.error("read file error", e);
-                    throw new RuntimeException(e);
-                }
-            } else {
-                sendBytes = getMessage().getBytes();
-            }
-        }
-        return sendBytes;
-    }
 }

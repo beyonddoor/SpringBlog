@@ -4,7 +4,6 @@ import codefun.load_test.config.AppSetting;
 import codefun.load_test.logic.user.IUserListener;
 import codefun.load_test.logic.user.User;
 import codefun.load_test.logic.user.UserManager;
-import codefun.load_test.logic.user.Connector;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -18,23 +17,24 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @SpringBootApplication
-public class TestLoadApplication implements ApplicationRunner {
+public class LoadTestApplication implements ApplicationRunner {
     private final AppSetting appSetting;
     private final UserManager userManager;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public TestLoadApplication(AppSetting appSetting, UserManager userManager) {
+    public LoadTestApplication(AppSetting appSetting, UserManager userManager) {
         this.appSetting = appSetting;
         this.userManager = userManager;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(TestLoadApplication.class, args);
+        SpringApplication.run(LoadTestApplication.class, args);
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         scheduler.scheduleAtFixedRate(userManager::logStat, 0, 1, TimeUnit.SECONDS);
+
         userManager.addUserListener(new IUserListener() {
             @Override
             public void onUserStop(User user) {

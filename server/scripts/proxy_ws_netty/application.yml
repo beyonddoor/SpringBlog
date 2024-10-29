@@ -10,4 +10,5 @@ app:
   web-socket-path: /ws_bin
   log-data: false
   local-port: 8088
-  local-addr: 0.0.0.0
+#  local-addr: 172.25.66.221
+  local-addr: localhost
