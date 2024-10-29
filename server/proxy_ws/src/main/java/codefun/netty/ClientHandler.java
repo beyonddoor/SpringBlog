@@ -1,6 +1,6 @@
 package codefun.netty;
 
-import codefun.ws_demo.util.ByteBufferUtil;
+import codefun.proxy_ws.util.ByteBufferUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

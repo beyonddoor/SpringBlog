@@ -16,8 +16,8 @@ app:
   ramp-up-time: 10
 
   # 消息相关
-  #  message: .
-  message-file: D:\mine\learn-langs\Toolbag\work\alias\common.sh
+  # message: .
+  # message-file:
   message-interval-ms: 200
   wait-to-reconnect-ms: 10000
 
