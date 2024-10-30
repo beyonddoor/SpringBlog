@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/blog.main.iml" filepath="$PROJECT_DIR$/.idea/modules/blog.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/codefun.proxy_ws_netty.main.iml" filepath="$PROJECT_DIR$/.idea/modules/codefun.proxy_ws_netty.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/echoserver.main.iml" filepath="$PROJECT_DIR$/.idea/modules/echoserver.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/load_test_netty.main.iml" filepath="$PROJECT_DIR$/.idea/modules/load_test_netty.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_tcp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_tcp.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_ws.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_ws.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_ws_netty.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_ws_netty.main.iml" />
     </modules>
   </component>
 </project>
