@@ -49,7 +49,7 @@ public class WebSocketServer {
                     });
 
             log.info("WebSocket server started at {} {}", appSetting.getLocalAddr(), appSetting.getLocalPort());
-            bootstrap.bind(new InetSocketAddress(appSetting.getLocalAddr(), appSetting.getLocalPort()))
+            bootstrap.bind(appSetting.getAddress())
                     .sync().channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

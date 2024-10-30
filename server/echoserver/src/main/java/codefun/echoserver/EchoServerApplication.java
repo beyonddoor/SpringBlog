@@ -51,9 +51,7 @@ public class EchoServerApplication implements CommandLineRunner {
                         }
                     });
 
-            ChannelFuture f = b.bind(new InetSocketAddress(
-                    echoServerConfig.getLocalAddr(), echoServerConfig.getLocalPort()
-            )).sync();
+            ChannelFuture f = b.bind(echoServerConfig.getAddress()).sync();
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

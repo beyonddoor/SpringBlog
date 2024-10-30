@@ -23,6 +23,8 @@ public class AppSetting {
 
     private int waitToReconnectMs;
 
+    private int logStatIntervalMs;
+
     /**
      * send int count
      */

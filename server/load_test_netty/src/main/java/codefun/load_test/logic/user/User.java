@@ -8,8 +8,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Slf4j
 public class User {
@@ -40,12 +38,12 @@ public class User {
 
     public void start(IUserAI userAI) {
         this.userAI = userAI;
-        userAI.start();
+        userAI.onStart();
     }
 
     public void stop() {
         if (userAI != null) {
-            userAI.stop();
+            userAI.onStop();
             userAI = null;
         }
 
@@ -79,7 +77,6 @@ public class User {
     }
 
     public void onDisconnected() {
-
     }
 
     public void onReady() {
@@ -97,6 +94,20 @@ public class User {
             userAI.onRead(buf);
         } else {
             buf.release();
+        }
+    }
+
+    public void destroy() {
+        stop();
+        if(userAI != null) {
+            userAI.onDestroy();
+            userAI = null;
+        }
+    }
+
+    public void logStat() {
+        if (userAI != null) {
+            userAI.logStat();
         }
     }
 

@@ -11,4 +11,4 @@ app:
   log-data: false
   local-port: 8088
 #  local-addr: 172.25.66.221
-  local-addr: localhost
+  local-addr: 0.0.0.0

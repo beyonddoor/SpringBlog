@@ -27,13 +27,21 @@ public class LoadTestApplication implements ApplicationRunner {
         this.userManager = userManager;
     }
 
+    private void shutdown() {
+        scheduler.shutdown();
+        userManager.destroyAll();
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(LoadTestApplication.class, args);
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        scheduler.scheduleAtFixedRate(userManager::logStat, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(userManager::logStat, 0,
+                appSetting.getLogStatIntervalMs(), TimeUnit.MILLISECONDS);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
         userManager.addUserListener(new IUserListener() {
             @Override
@@ -53,10 +61,10 @@ public class LoadTestApplication implements ApplicationRunner {
             if (i % batchCount == 0) {
                 var diffNs = System.nanoTime() - lastTimeNs;
                 lastTimeNs = System.nanoTime();
-                var sleepMs = (int)((float)batchCount * appSetting.getRampUpTime() / appSetting.getUserCount() * 1000);
+                var sleepMs = (int) ((float) batchCount * appSetting.getRampUpTime() / appSetting.getUserCount() * 1000);
                 // todo more accurate ramp up time
                 // sleepMs -= (int)(diffNs / 1000000);
-                if(sleepMs > 0) {
+                if (sleepMs > 0) {
                     Thread.sleep(sleepMs);
                 }
             }

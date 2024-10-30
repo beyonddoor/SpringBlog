@@ -22,3 +22,4 @@ app:
   wait-to-reconnect-ms: 10000
   # bytes total = send-int-count*8
   send-int-count: 100
+  log-stat-interval-ms: 10000

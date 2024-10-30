@@ -22,6 +22,8 @@ public class UserManager {
 
     private final HashMap<UserState, Integer> userStateMap = new HashMap<>();
 
+    private final ArrayList<User> users = new ArrayList<>();
+
     public UserManager(UserAIFactory strategyFactory) {
         this.strategyFactory = strategyFactory;
     }
@@ -47,16 +49,23 @@ public class UserManager {
     }
 
     public void logStat() {
-        log.info("stat {}", usersMap.size());
-
         userStateMap.clear();
-        for (var user : usersMap.values()) {
+
+        users.clear();
+        users.addAll(usersMap.values());
+
+        for (var user : users) {
             var state = user.getUserState();
             userStateMap.put(state, userStateMap.getOrDefault(state, 0) + 1);
         }
 
+        var sb = new StringBuffer();
         for (var entry : userStateMap.entrySet()) {
-            log.info("state {} count {}", entry.getKey(), entry.getValue());
+            sb.append(entry.getKey()).append(":").append(entry.getValue()).append(" ");
+        }
+        log.info("total:{} {}", usersMap.size(), sb);
+        for (var user : users) {
+            user.logStat();
         }
     }
 
@@ -76,11 +85,18 @@ public class UserManager {
     }
 
     public void destroyUser(User user) {
-        user.stop();
+        user.destroy();
         usersMap.remove(user.getId());
     }
 
     public long nextId() {
         return nextId++;
+    }
+
+    public void destroyAll() {
+        for (var user : usersMap.values()) {
+            user.destroy();
+        }
+        usersMap.clear();
     }
 }

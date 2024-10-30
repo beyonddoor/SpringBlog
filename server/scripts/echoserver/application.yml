@@ -1,6 +1,6 @@
 
 app:
-  local-addr: 0.0.0.0
+  local-addr:
 #  local-addr: 172.25.66.221
   local-port: 8081
 
