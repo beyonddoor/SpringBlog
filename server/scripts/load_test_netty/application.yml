@@ -7,19 +7,19 @@ app:
   # the  server
   #host: 172.25.66.221
 #  host: 172.23.94.136
-  web-socket-path: ws://localhost:8088/ws_bin
+#web-socket-path: ws://localhost:8088/ws_bin
   host: localhost
-  port: 8088
+  port: 8081
 
   # user 相关
-  user-count: 100
+  user-count: 1
   ramp-up-time: 10
 
   # 消息相关
   # message: .
   # message-file:
-  message-interval-ms: 200
+  message-interval-ms: 1
   wait-to-reconnect-ms: 10000
   # bytes total = send-int-count*8
-  send-int-count: 100
+  send-int-count: 1000
   log-stat-interval-ms: 10000
