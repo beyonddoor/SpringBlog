@@ -2,7 +2,7 @@ package codefun.load_test.logic.ai;
 
 import codefun.load_test.config.AppSetting;
 import codefun.load_test.logic.user.User;
-import codefun.load_test.util.SpringContext;
+import codefun.util.SpringContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -47,10 +47,6 @@ public class UserAIEcho implements IUserAI {
         return bufToWrite;
     }
 
-    private boolean isWebSocket() {
-        return appSetting.getWebSocketPath() != null;
-    }
-
     private void sendMsg() {
         assert getBuf().refCnt() == 1;
 
@@ -65,7 +61,7 @@ public class UserAIEcho implements IUserAI {
     }
 
     private void doSend(ByteBuf data) {
-        if (isWebSocket()) {
+        if (appSetting.isWebSocketMode()) {
             user.channel().writeAndFlush(new BinaryWebSocketFrame(data));
         } else {
             user.channel().writeAndFlush(data);

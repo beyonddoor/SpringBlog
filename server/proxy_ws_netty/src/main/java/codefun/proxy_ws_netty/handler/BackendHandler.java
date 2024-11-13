@@ -1,7 +1,7 @@
 package codefun.proxy_ws_netty.handler;
 
 import codefun.proxy_ws_netty.config.AppSetting;
-import codefun.proxy_ws_netty.util.NettyUtil;
+import codefun.util.NettyUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;

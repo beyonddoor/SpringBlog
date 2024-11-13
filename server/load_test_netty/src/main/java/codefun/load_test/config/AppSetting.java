@@ -45,4 +45,8 @@ public class AppSetting {
      */
     int rampUpTime;
 
+    public boolean isWebSocketMode() {
+        return webSocketPath != null && !webSocketPath.isEmpty();
+    }
+
 }

@@ -3,7 +3,7 @@ package codefun.load_test.logic.user;
 import codefun.load_test.config.AppSetting;
 import codefun.load_test.handler.TcpReadyHandler;
 import codefun.load_test.handler.WebSocketReadyHandler;
-import codefun.load_test.util.SpringContext;
+import codefun.util.SpringContext;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -37,7 +37,7 @@ public class Connector {
     }
 
     private void buildChannelPipeline(ChannelPipeline pipeline) {
-        if (appSetting.getWebSocketPath() != null && !appSetting.getWebSocketPath().isEmpty()) {
+        if (appSetting.isWebSocketMode()) {
             log.debug("add websocket handler");
 
             // Add SSL handler if necessary

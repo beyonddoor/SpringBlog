@@ -2,12 +2,19 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/blog.main.iml" filepath="$PROJECT_DIR$/.idea/modules/blog.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/console.main.iml" filepath="$PROJECT_DIR$/.idea/modules/console.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/echoserver.main.iml" filepath="$PROJECT_DIR$/.idea/modules/echoserver.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/load_test_netty.main.iml" filepath="$PROJECT_DIR$/.idea/modules/load_test_netty.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_tcp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_tcp.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_ws.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_ws.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_ws_netty.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_ws_netty.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/console/servers.console.main.iml" filepath="$PROJECT_DIR$/.idea/modules/console/servers.console.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/echoserver/servers.echoserver.main.iml" filepath="$PROJECT_DIR$/.idea/modules/echoserver/servers.echoserver.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/load_test_netty/servers.load_test_netty.main.iml" filepath="$PROJECT_DIR$/.idea/modules/load_test_netty/servers.load_test_netty.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/servers.main.iml" filepath="$PROJECT_DIR$/.idea/modules/servers.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_tcp/servers.proxy_tcp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_tcp/servers.proxy_tcp.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_ws/servers.proxy_ws.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_ws/servers.proxy_ws.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proxy_ws_netty/servers.proxy_ws_netty.main.iml" filepath="$PROJECT_DIR$/.idea/modules/proxy_ws_netty/servers.proxy_ws_netty.main.iml" />
     </modules>
   </component>
 </project>

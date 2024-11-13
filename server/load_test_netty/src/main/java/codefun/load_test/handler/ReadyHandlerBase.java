@@ -1,7 +1,7 @@
 package codefun.load_test.handler;
 
 import codefun.load_test.logic.user.User;
-import codefun.load_test.util.NettyUtil;
+import codefun.util.NettyUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufHolder;
 import io.netty.channel.*;

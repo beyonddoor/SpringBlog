@@ -1,3 +1,8 @@
-rootProject.name = 'blog'
-//include 'backend'
-
+rootProject.name = 'servers'
+include 'util'
+include 'console'
+include 'load_test_netty'
+include 'echoserver'
+include 'proxy_tcp'
+include 'proxy_ws'
+include 'proxy_ws_netty'

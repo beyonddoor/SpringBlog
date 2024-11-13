@@ -7,3 +7,6 @@ todo
 1. ~~修复bytebuf的泄漏 DONE~~
 2. ~~移除springboot server监听8080 DONE~~
 3. 
+
+性能
+5000个ws连接，每个连接发送16kB/s，是可以支撑的
