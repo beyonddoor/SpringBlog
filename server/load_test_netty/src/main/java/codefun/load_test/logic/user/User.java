@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class User {
+public class User implements IUser{
     private IUserAI userAI;
     private final UserAIFactory strategyFactory;
 
@@ -36,16 +36,14 @@ public class User {
         return channelFuture.channel();
     }
 
-    public void start(IUserAI userAI) {
+    private void startAI(IUserAI userAI) {
+        destroyAI();
         this.userAI = userAI;
         userAI.onStart();
     }
 
     public void stop() {
-        if (userAI != null) {
-            userAI.onStop();
-            userAI = null;
-        }
+        destroyAI();
 
         if (connector != null) {
             connector.stop();
@@ -55,7 +53,7 @@ public class User {
         userState = UserState.DISCONNECTED;
     }
 
-    public void connect() {
+    public void start() {
         stop();
 
         try {
@@ -67,26 +65,13 @@ public class User {
         }
     }
 
-    public void onConnectFailed() {
+    public void onDisconnected() {
         userState = UserState.DISCONNECTED;
-        getUserManager().onChannelInactive(this);
     }
 
     public void onConnected() {
-        userState = UserState.CONNECTED;
-    }
-
-    public void onDisconnected() {
-    }
-
-    public void onReady() {
         userState = UserState.READY;
-        var userAI = strategyFactory.createStrategy("echo");
-        userAI.setUser(this);
-        start(userAI);
-    }
-
-    public void onChannelActive() {
+        startAI(strategyFactory.createStrategy("echo", this));
     }
 
     public void onChannelRead(ByteBuf buf) {
@@ -99,6 +84,10 @@ public class User {
 
     public void destroy() {
         stop();
+        destroyAI();
+    }
+
+    private void destroyAI() {
         if(userAI != null) {
             userAI.onDestroy();
             userAI = null;

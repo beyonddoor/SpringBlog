@@ -1,14 +1,17 @@
 package codefun.load_test;
 
 import codefun.load_test.config.AppSetting;
+import codefun.load_test.logic.user.IUser;
 import codefun.load_test.logic.user.IUserListener;
 import codefun.load_test.logic.user.User;
 import codefun.load_test.logic.user.UserManager;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -17,7 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @SpringBootApplication
+@ComponentScan(basePackages = {"codefun.load_test", "codefun.util"})
 public class LoadTestApplication implements ApplicationRunner {
+    @Getter
     private final AppSetting appSetting;
     private final UserManager userManager;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -29,7 +34,7 @@ public class LoadTestApplication implements ApplicationRunner {
 
     private void shutdown() {
         scheduler.shutdown();
-        userManager.destroyAll();
+        userManager.destroyAllUsers();
     }
 
     public static void main(String[] args) {
@@ -45,8 +50,8 @@ public class LoadTestApplication implements ApplicationRunner {
 
         userManager.addUserListener(new IUserListener() {
             @Override
-            public void onUserStop(User user) {
-                scheduler.schedule(user::connect, appSetting.getWaitToReconnectMs(), TimeUnit.MILLISECONDS);
+            public void onUserDisconnected(IUser user) {
+                scheduler.schedule(user::start, appSetting.getWaitToReconnectMs(), TimeUnit.MILLISECONDS);
             }
         });
 
@@ -56,7 +61,8 @@ public class LoadTestApplication implements ApplicationRunner {
         int batchCount = 10;
         for (int i = 1; i <= appSetting.getUserCount(); i++) {
 
-            userManager.createUser();
+            var user = userManager.createUser();
+            user.start();
 
             if (i % batchCount == 0) {
                 var diffNs = System.nanoTime() - lastTimeNs;

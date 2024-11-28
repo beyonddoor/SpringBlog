@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-public class UserManager {
+public class UserManager implements IUserManager {
 
     private static long nextId = 0;
 
@@ -28,23 +28,19 @@ public class UserManager {
         this.strategyFactory = strategyFactory;
     }
 
-    public void onChannelActive(User user) {
-        user.onChannelActive();
-    }
-
-    public void onChannelReady(User user) {
-        user.onReady();
+    public void onUserConnected(User user) {
+        user.onConnected();
 
         for (var listener : userListeners) {
-            listener.onUserStart(user);
+            listener.onUserConnected(user);
         }
     }
 
-    public void onChannelInactive(User user) {
+    public void onUserDisconnected(User user) {
         user.onDisconnected();
 
         for (var listener : userListeners) {
-            listener.onUserStop(user);
+            listener.onUserDisconnected(user);
         }
     }
 
@@ -77,14 +73,13 @@ public class UserManager {
         userListeners.remove(listener);
     }
 
-    public User createUser() {
+    public IUser createUser() {
         User user = new User( this, strategyFactory);
-        user.connect();
         usersMap.put(user.getId(), user);
         return user;
     }
 
-    public void destroyUser(User user) {
+    public void destroyUser(IUser user) {
         user.destroy();
         usersMap.remove(user.getId());
     }
@@ -93,7 +88,7 @@ public class UserManager {
         return nextId++;
     }
 
-    public void destroyAll() {
+    public void destroyAllUsers() {
         for (var user : usersMap.values()) {
             user.destroy();
         }

@@ -7,7 +7,7 @@ app:
   # the  server
   backend-host: localhost
   backend-port: 8081
-  web-socket-path: /ws_bin
+  web-socket-path: /ws
   log-data: false
   local-port: 8088
 #  local-addr: 172.25.66.221

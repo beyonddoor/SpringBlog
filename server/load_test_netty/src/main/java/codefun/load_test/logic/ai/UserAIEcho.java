@@ -13,23 +13,22 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class UserAIEcho implements IUserAI {
-    private User user;
+    private final User user;
     private ScheduledFuture<?> future;
     private final AppSetting appSetting;
     private final ByteBuf bufToWrite;
     private final ByteBuf bufToRead;
 
-    private long sendSeq = 0;
-    private long recvSeq = 0;
+    /**
+     * 上次send的数字
+     */
+    private long lastSendNum = 0;
+    private long lastRecvNum = 0;
 
-    public UserAIEcho() {
+    public UserAIEcho(User user) {
         appSetting = SpringContext.getBean(AppSetting.class);
         bufToWrite = Unpooled.directBuffer();
         bufToRead = Unpooled.directBuffer();
-    }
-
-    @Override
-    public void setUser(User user) {
         this.user = user;
     }
 
@@ -41,22 +40,24 @@ public class UserAIEcho implements IUserAI {
                 this::sendMsg, 1, appSetting.getMessageIntervalMs(), TimeUnit.MILLISECONDS);
     }
 
-    private ByteBuf getBuf() {
+    private void resetReadAndWriteBuff() {
         bufToWrite.resetReaderIndex();
         bufToWrite.resetWriterIndex();
-        return bufToWrite;
     }
 
     private void sendMsg() {
-        assert getBuf().refCnt() == 1;
+        resetReadAndWriteBuff();
+        assert bufToWrite.refCnt() == 1;
 
         //fixme: sendSeq is not reset, may be this is run in another thread
-        var data = getBuf().retain();
+        var data = bufToWrite.retain();
+
         for (int i = 0; i < appSetting.getSendIntCount(); i++) {
-            sendSeq++;
-            data.writeLong(sendSeq);
+            lastSendNum++;
+            data.writeLong(lastSendNum);
         }
-        log.debug("{} UserAIEcho sendMsg sendSeq={} recvSeq={}", user, sendSeq, recvSeq);
+        log.debug("{} UserAIEcho sendMsg lastSendNum={} lastRecvNum={} sendBuff={}",
+                user, lastSendNum, lastRecvNum, data.readableBytes());
         doSend(data);
     }
 
@@ -69,44 +70,40 @@ public class UserAIEcho implements IUserAI {
     }
 
     @Override
-    public void onStop() {
-        log.debug("{} UserAIEcho stop sendSeq={} recvSeq={}", user, sendSeq, recvSeq);
+    public void onRead(ByteBuf buf) {
+        bufToRead.writeBytes(buf);
+        buf.release();
+
+        while (bufToRead.readableBytes() >= Long.BYTES) {
+            long curReadNum = bufToRead.readLong();
+            if (curReadNum != lastRecvNum + 1) {
+                log.error("{} seq error lastSendNum={} curReadNum={} lastRecvNum={}",
+                        user, lastSendNum, curReadNum, lastRecvNum);
+                user.stop();
+                break;
+            }
+            lastRecvNum = curReadNum;
+        }
+
+        log.debug("{} UserAIEcho onRead lastSendNum={} lastRecvNum={}", user, lastSendNum, lastRecvNum);
+    }
+
+    @Override
+    public void onDestroy() {
+        log.debug("{} UserAIEcho stop lastSendNum={} lastRecvNum={}", user, lastSendNum, lastRecvNum);
 
         if (future != null) {
             future.cancel(true);
             future = null;
         }
 
-        sendSeq = 0;
-        recvSeq = 0;
-    }
-
-    @Override
-    public void onRead(ByteBuf buf) {
-        bufToRead.writeBytes(buf);
-        buf.release();
-
-        while (bufToRead.readableBytes() >= Long.BYTES) {
-            long seq = bufToRead.readLong();
-            if (seq != recvSeq + 1) {
-                log.error("{} seq error {} {}", user, seq, recvSeq);
-                user.stop();
-                break;
-            }
-            recvSeq = seq;
-        }
-
-        log.debug("{} UserAIEcho onRead sendSeq={} recvSeq={}", user, sendSeq, recvSeq);
-    }
-
-    @Override
-    public void onDestroy() {
         bufToWrite.release();
         bufToRead.release();
     }
 
     @Override
     public void logStat() {
-        log.info("{} UserAIEcho status sendSeq={} recvSeq={}", user, sendSeq, recvSeq);
+        log.info("{} UserAIEcho status lastSendNum={} lastRecvNum={} sendBuff={}",
+                user, lastSendNum, lastRecvNum, bufToWrite.readableBytes());
     }
 }

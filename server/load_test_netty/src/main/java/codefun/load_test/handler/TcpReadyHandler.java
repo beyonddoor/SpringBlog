@@ -12,6 +12,6 @@ public class TcpReadyHandler extends ReadyHandlerBase {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        user.getUserManager().onChannelReady(user);
+        user.getUserManager().onUserConnected(user);
     }
 }

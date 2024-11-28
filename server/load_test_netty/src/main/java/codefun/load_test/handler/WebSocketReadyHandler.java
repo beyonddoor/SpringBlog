@@ -21,7 +21,7 @@ public class WebSocketReadyHandler extends ReadyHandlerBase {
 
             if (handshakeEvent == WebSocketClientProtocolHandler.ClientHandshakeStateEvent.HANDSHAKE_COMPLETE) {
                 log.debug("WebSocket handshake completed");
-                user.getUserManager().onChannelReady(user);
+                user.getUserManager().onUserConnected(user);
             }
         } else {
             super.userEventTriggered(ctx, evt);

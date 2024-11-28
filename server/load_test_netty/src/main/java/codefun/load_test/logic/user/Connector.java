@@ -89,7 +89,7 @@ public class Connector {
                 user.onConnected();
             } else {
                 log.debug("connect fail", future.cause());
-                user.onConnectFailed();
+                user.onDisconnected();
             }
         });
     }

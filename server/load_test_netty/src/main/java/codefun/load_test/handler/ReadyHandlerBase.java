@@ -23,13 +23,12 @@ public abstract class ReadyHandlerBase extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.debug("{} channelActive {}", user, ctx.channel());
-        user.getUserManager().onChannelActive(user);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.debug("{} channelInactive {}", user, ctx.channel());
-        user.getUserManager().onChannelInactive(user);
+        user.getUserManager().onUserDisconnected(user);
     }
 
     @Override
