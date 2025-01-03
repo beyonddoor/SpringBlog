@@ -4,14 +4,6 @@ logging:
     root: INFO
 
 app:
-  # the  server
-  #host: 172.25.66.221
-  #  host: 172.23.94.136
-#  web-socket-path: ws://localhost:8088/ws_bin
-  web-socket-path: !!null
-  host: localhost
-  port: 8088
-
   # user 相关
   user-count: 100
   ramp-up-time: 10
@@ -24,3 +16,4 @@ app:
   # bytes total = send-int-count*8
   send-int-count: 100
   log-stat-interval-ms: 10000
+  remote-address: ws://localhost:8088/ws_bin

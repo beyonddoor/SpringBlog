@@ -5,17 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 @Slf4j
 @Component
 @ConfigurationProperties(prefix = "app")
 @Data
 public class AppSetting {
-    private String host;
-    private int port;
+    private String remoteAddress;
     /**
      * send message interval
      */
@@ -30,12 +28,6 @@ public class AppSetting {
      */
     int sendIntCount;
 
-
-    /**
-     * for websocket
-     */
-    String webSocketPath;
-
     /**
      * user count
      */
@@ -45,8 +37,27 @@ public class AppSetting {
      */
     int rampUpTime;
 
-    public boolean isWebSocketMode() {
-        return webSocketPath != null && !webSocketPath.isEmpty();
+    public SocketAddress getTargetAddress() {
+        var addr = remoteAddress;
+        if(addr.startsWith("ws://")) {
+            addr = addr.substring(5);
+        }
+        var lastIndex = addr.indexOf("/");
+        if(lastIndex != -1) {
+            addr = addr.substring(0, lastIndex);
+        }
+        return parseAddr(addr);
     }
 
+    private static SocketAddress parseAddr(String addr) {
+        var parts = addr.split(":");
+        if(parts.length != 2) {
+            throw new IllegalArgumentException("remoteAddress format error");
+        }
+        return new InetSocketAddress(parts[0], Integer.parseInt(parts[1]));
+    }
+
+    public boolean isWebSocketMode() {
+        return remoteAddress.startsWith("ws://");
+    }
 }

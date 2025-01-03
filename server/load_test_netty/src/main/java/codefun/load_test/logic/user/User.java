@@ -54,6 +54,8 @@ public class User implements IUser{
     }
 
     public void start() {
+        log.debug("User start {}", this);
+
         stop();
 
         try {

@@ -48,7 +48,7 @@ public class Connector {
 //            }
 
             var config = WebSocketClientProtocolConfig.newBuilder()
-                    .webSocketUri(appSetting.getWebSocketPath())
+                    .webSocketUri(appSetting.getRemoteAddress())
                     .version(WebSocketVersion.V13)
                     .build();
 
@@ -82,8 +82,8 @@ public class Connector {
                     }
                 });
 
-        log.debug("connect {} {}", appSetting.getHost(), appSetting.getPort());
-        return b.connect(appSetting.getHost(), appSetting.getPort()).addListener(future -> {
+        log.debug("connect {}", appSetting.getRemoteAddress());
+        return b.connect(appSetting.getTargetAddress()).addListener(future -> {
             if (future.isSuccess()) {
                 log.debug("connect success");
                 user.onConnected();

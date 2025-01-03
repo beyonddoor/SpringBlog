@@ -22,7 +22,7 @@ public class UserManager implements IUserManager {
 
     private final HashMap<UserState, Integer> userStateMap = new HashMap<>();
 
-    private final ArrayList<User> users = new ArrayList<>();
+    private final ArrayList<User> tempUsers = new ArrayList<>();
 
     public UserManager(UserAIFactory strategyFactory) {
         this.strategyFactory = strategyFactory;
@@ -47,10 +47,10 @@ public class UserManager implements IUserManager {
     public void logStat() {
         userStateMap.clear();
 
-        users.clear();
-        users.addAll(usersMap.values());
+        tempUsers.clear();
+        tempUsers.addAll(usersMap.values());
 
-        for (var user : users) {
+        for (var user : tempUsers) {
             var state = user.getUserState();
             userStateMap.put(state, userStateMap.getOrDefault(state, 0) + 1);
         }
@@ -60,8 +60,11 @@ public class UserManager implements IUserManager {
             sb.append(entry.getKey()).append(":").append(entry.getValue()).append(" ");
         }
         log.info("total:{} {}", usersMap.size(), sb);
-        for (var user : users) {
-            user.logStat();
+
+        if(log.isDebugEnabled()) {
+            for (var user : tempUsers) {
+                user.logStat();
+            }
         }
     }
 

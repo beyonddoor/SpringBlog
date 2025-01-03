@@ -4,6 +4,8 @@ import codefun.load_test.config.AppSetting;
 import codefun.load_test.logic.user.User;
 import codefun.util.SpringContext;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,7 @@ public class UserAIEcho implements IUserAI {
     private ScheduledFuture<?> future;
     private final AppSetting appSetting;
     private final ByteBuf bufToWrite;
-    private final ByteBuf bufToRead;
+    private final CompositeByteBuf bufToRead;
 
     /**
      * 上次send的数字
@@ -27,8 +29,8 @@ public class UserAIEcho implements IUserAI {
 
     public UserAIEcho(User user) {
         appSetting = SpringContext.getBean(AppSetting.class);
-        bufToWrite = Unpooled.directBuffer();
-        bufToRead = Unpooled.directBuffer();
+        bufToWrite = user.channel().alloc().directBuffer();
+        bufToRead = user.channel().alloc().compositeBuffer();
         this.user = user;
     }
 
@@ -40,13 +42,16 @@ public class UserAIEcho implements IUserAI {
                 this::sendMsg, 1, appSetting.getMessageIntervalMs(), TimeUnit.MILLISECONDS);
     }
 
-    private void resetReadAndWriteBuff() {
+    /**
+     * reset writeBuff index
+     */
+    private void resetWriteBuffIndex() {
         bufToWrite.resetReaderIndex();
         bufToWrite.resetWriterIndex();
     }
 
     private void sendMsg() {
-        resetReadAndWriteBuff();
+        resetWriteBuffIndex();
         assert bufToWrite.refCnt() == 1;
 
         //fixme: sendSeq is not reset, may be this is run in another thread
@@ -71,8 +76,7 @@ public class UserAIEcho implements IUserAI {
 
     @Override
     public void onRead(ByteBuf buf) {
-        bufToRead.writeBytes(buf);
-        buf.release();
+        bufToRead.addComponent(true, buf);
 
         while (bufToRead.readableBytes() >= Long.BYTES) {
             long curReadNum = bufToRead.readLong();
@@ -85,6 +89,7 @@ public class UserAIEcho implements IUserAI {
             lastRecvNum = curReadNum;
         }
 
+        bufToRead.discardReadComponents();
         log.debug("{} UserAIEcho onRead lastSendNum={} lastRecvNum={}", user, lastSendNum, lastRecvNum);
     }
 
