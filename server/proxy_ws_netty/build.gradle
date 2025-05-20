@@ -73,6 +73,18 @@ task proguard(type: proguard.gradle.ProGuardTask) {
     injars 'build/libs/proxy_ws_netty-0.0.1-SNAPSHOT.jar'
     outjars 'build/libs/proxy_ws_netty-0.0.1-SNAPSHOT-min.jar'
     configuration 'src/main/resources/proguard-files.pro'
+
+    def javaHome = System.getProperty("java.home")
+    if (file("$javaHome/lib/rt.jar").exists()) {
+        libraryjars "$javaHome/lib/rt.jar"
+    } else {
+        libraryjars "$javaHome/jmods/java.base.jmod"
+    }
+
+    // Add runtime dependencies to libraryjars (don't process them, just reference)
+    configurations.runtimeClasspath.files.each {
+        libraryjars it
+    }
 }
 
 //jar {
